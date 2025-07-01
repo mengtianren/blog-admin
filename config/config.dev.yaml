@@ -1,0 +1,21 @@
+
+app:
+  name: "blog-admin"
+  port: 8080
+  Env: dev
+logger:
+  level: info                     # 日志等级
+  prefix: "[gin-blog-admin-api]"     # 日志前缀
+  director: logger                   # 日志输出目录
+  show_line: true
+  log_in_console: true           # 是否输出到控制台
+database:
+  # host: "blog-admin-mysql"
+  host: "127.0.0.1"
+  port: 3306
+  user: "blog"
+  password: "123456"
+  dbname: "blog"
+  charset: "utf8mb4"
+  parseTime: "True"
+  loc: "Local"

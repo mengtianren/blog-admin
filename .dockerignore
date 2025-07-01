@@ -1,0 +1,15 @@
+.git
+.vscode
+*.lnk
+*.log
+*.tmp
+*.swp
+node_modules
+*.DS_Store
+docker-compose.yaml
+Dockerfile
+nginx/
+mysql/
+redis/
+
+# 把映射数据忽略打包
