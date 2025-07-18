@@ -54,4 +54,5 @@ func init() {
 	}
 	viper.Unmarshal(&Config)
 	fmt.Printf("✅ YAML 配置加载成功:\n%+v\n", Config.Logger)
+
 }
