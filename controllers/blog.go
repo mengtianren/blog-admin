@@ -19,6 +19,21 @@ type BlogController struct {
 	*services.BlogService
 }
 
+func (b *BlogController) GetBlogList(c *gin.Context) {
+	var req core.Page
+	if err := c.ShouldBindJSON(&req); err != nil {
+		core.ResError(c, 500, "参数错误")
+		return
+	}
+	res, err1 := b.List(req)
+	if err1 != nil {
+		core.ResError(c, 500, err1.Error())
+		return
+	}
+	core.ResSuccess(c, res)
+
+}
+
 func (b *BlogController) GetBlog(c *gin.Context) {
 	idStr := c.Query("id")
 	if idStr == "" {

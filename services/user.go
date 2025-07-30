@@ -77,6 +77,7 @@ func (u *UserService) GetUser(phone string, password string) (*Info, error) {
 	info := &Info{
 		ID:    user.ID,
 		Phone: user.Phone,
+		Name:  user.Name,
 	}
 	return info, nil
 
@@ -89,5 +90,20 @@ func (u *UserService) UpdateInfo(id uint, phone string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+func (u *UserService) UpdatePassword(id uint, old, password string) error {
+	var user models.User
+	if err := global.DB.First(&user, id).Error; err != nil {
+		return err
+	}
+	if !core.CheckPasswordHash(old, user.Password) {
+		return errors.New("旧密码错误")
+	}
+	p, err1 := core.HashPassword(password)
+	if err1 != nil {
+		return err1
+	}
+	global.DB.Model(&user).Update("password", p)
 	return nil
 }

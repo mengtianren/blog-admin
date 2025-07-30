@@ -12,10 +12,10 @@ import (
 // token 验证中间件
 func JwtMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.URL.Path, "/public") {
-			c.Next()
-			return
-		}
+		// if strings.HasPrefix(c.Request.URL.Path, "/public") {
+		// 	c.Next()
+		// 	return
+		// }
 
 		authHeader := c.GetHeader("Authorization")
 

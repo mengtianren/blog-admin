@@ -40,6 +40,7 @@ func (p *PublicController) Login(c *gin.Context) {
 	core.ResSuccess(c, gin.H{
 		"token": token,
 		"id":    user.ID,
+		"name":  user.Name,
 	})
 
 }

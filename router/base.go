@@ -9,7 +9,7 @@ import (
 func RouterInit() *gin.Engine {
 	// 初始化路由
 	r := gin.New()
-	r.Use(gin.Recovery(), middlewares.LoggerMiddleware(), middlewares.JwtMiddleware())
+	r.Use(gin.Recovery(), middlewares.LoggerMiddleware())
 	{
 		BlogRouterInit(r)
 		UserRouterInit(r)
