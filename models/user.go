@@ -10,6 +10,7 @@ type User struct {
 	Password string  `gorm:"password;not null;comment:密码" json:"password"`
 	Blogs    []*Blog `gorm:"foreignKey:UserId"` // 一个用户有多个博客
 	Roles    []*Role `gorm:"many2many:user_roles"`
+	Comment  []*Comment
 	gorm.Model
 }
 

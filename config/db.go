@@ -36,7 +36,7 @@ func DbInit() {
 	// }
 	// sqlDb.SetMaxOpenConns()
 	if Config.App.Env == "dev" {
-		err1 := db.AutoMigrate(&models.User{}, &models.Blog{}, &models.Role{})
+		err1 := db.AutoMigrate(&models.User{}, &models.Blog{}, &models.Role{}, &models.Comment{})
 		if err1 != nil {
 			fmt.Printf("数据库迁移失败:%v", err1)
 		}

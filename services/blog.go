@@ -6,16 +6,25 @@ import (
 	"blog-admin/models"
 	"errors"
 	"time"
+
+	"gorm.io/gorm"
 )
+
+type Comment struct {
+	CreatedAt time.Time `json:"created_at"`
+	Desc      string    `json:"desc"`
+	UserName  string    `json:"user_name"`
+}
 
 // 博客详情响应
 type blogRes struct {
-	ID       uint   `json:"id"`
-	Title    string `json:"title"`
-	Content  string `json:"content"`
-	UserID   uint   `json:"user_id"`
-	UserName string `json:"user_name"`
-	ShowNum  int    `json:"show_num"`
+	ID       uint      `json:"id"`
+	Title    string    `json:"title"`
+	Content  string    `json:"content"`
+	UserID   uint      `json:"user_id"`
+	UserName string    `json:"user_name"`
+	ShowNum  int       `json:"show_num"`
+	Comments []Comment `json:"comments"`
 }
 type BlogService struct {
 	*models.Blog
@@ -57,11 +66,21 @@ func (b *BlogService) GetById(id uint) (*blogRes, error) {
 
 	db := global.DB.Model(&models.Blog{}).Where("id = ?", id)
 
-	err := db.Preload("User").First(&blog).Error
+	err := db.Preload("Comment", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("User").Order("created_at desc")
+	}).Preload("User").First(&blog).Error
 	if err != nil {
 		return nil, err
 	}
 	db.Updates(&models.Blog{ShowNum: blog.ShowNum + 1})
+	var comment []Comment
+	for _, v := range blog.Comment {
+		comment = append(comment, Comment{
+			CreatedAt: v.CreatedAt,
+			Desc:      v.Desc,
+			UserName:  v.User.Name,
+		})
+	}
 
 	res := &blogRes{
 		ID:       blog.ID,
@@ -70,6 +89,7 @@ func (b *BlogService) GetById(id uint) (*blogRes, error) {
 		UserID:   blog.User.ID,
 		UserName: blog.User.Name,
 		ShowNum:  blog.ShowNum,
+		Comments: comment,
 	}
 
 	return res, nil

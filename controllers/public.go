@@ -12,6 +12,10 @@ type LoginReq struct {
 	Phone    string `json:"phone" binding:"required,len=11"`
 	Password string `json:"password" required:"true" binding:"required,min=6,max=12"`
 }
+type RegisterReq struct {
+	LoginReq
+	Code string `json:"code" binding:"required"`
+}
 
 type PublicController struct {
 }
@@ -46,11 +50,16 @@ func (p *PublicController) Login(c *gin.Context) {
 }
 
 func (p *PublicController) Register(c *gin.Context) {
-	var req LoginReq
+	var req RegisterReq
 	if err := c.ShouldBindJSON(&req); err != nil {
 		core.ResError(c, 400, "参数错误")
 		return
 	}
+	if req.Code != "9999" {
+		core.ResError(c, 400, "邀请码错误")
+		return
+	}
+
 	s := &services.UserService{}
 	global.Log.Infof("req: %v", req)
 	if err := s.Register(req.Phone, req.Password); err != nil {
