@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"blog-admin/core"
+	"blog-admin/global"
+	"blog-admin/models"
 	"blog-admin/services"
 	"net/http"
 	"strconv"
@@ -97,4 +99,31 @@ func (b *BlogController) PutBlog(c *gin.Context) {
 		return
 	}
 	core.ResSuccess(c, true)
+}
+
+/*
+*
+评论
+*/
+func (b *BlogController) PostComment(c *gin.Context) {
+	userId, _ := c.Get("userId")
+	var req struct {
+		BlogId uint   `json:"blog_id" binding:"required"`
+		Desc   string `json:"desc" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		core.ResError(c, 400, "请检查参数")
+		return
+	}
+	if err := global.DB.Create(&models.Comment{
+
+		UserId: userId.(uint),
+		BlogId: req.BlogId,
+		Desc:   req.Desc,
+	}).Error; err != nil {
+		core.ResError(c, 400, err.Error())
+		return
+	}
+	core.ResSuccess(c, true)
+
 }

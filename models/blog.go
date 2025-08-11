@@ -11,7 +11,7 @@ type Blog struct {
 	User    *User     `gorm:"foreignKey:UserId;references:ID" json:"user"` // belongs To
 	ShowNum int       `gorm:"show_num;default:0" comment:"阅读量"`
 	UserId  uint      `gorm:"user_id;not null;comment:用户id" json:"user_id"`
-	Comment []Comment `gorm:"foreignKey:BlogId;references:ID;constraint:OnDelete:CASCADE;" json:"comment"`
+	Comments []*Comment `gorm:"foreignKey:BlogId;references:ID;constraint:OnDelete:CASCADE;" json:"comments"`
 	*gorm.Model
 }
 

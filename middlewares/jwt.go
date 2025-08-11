@@ -28,7 +28,7 @@ func JwtMiddleware() gin.HandlerFunc {
 
 		claims, err := core.ParseToken(tokenStr)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "用户权限有误"})
+			core.ResError(c, http.StatusUnauthorized, "用户权限有误")
 			c.Abort()
 			return
 		}

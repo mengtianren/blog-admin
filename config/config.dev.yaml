@@ -13,8 +13,8 @@ database:
   # host: "blog-admin-mysql"
   host: "127.0.0.1"
   port: 3306
-  user: "blog"
-  password: "123456"
+  user: "root"
+  password: "mengtianren@jingdong"
   dbname: "blog"
   charset: "utf8mb4"
   parseTime: "True"

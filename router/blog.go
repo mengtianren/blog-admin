@@ -15,4 +15,5 @@ func BlogRouterInit(r *gin.Engine) {
 	router.GET("", c.GetBlog)
 	router.POST("", middlewares.JwtMiddleware(), c.PostBlog)
 	router.PUT("", middlewares.JwtMiddleware(), c.PutBlog)
+	router.POST("comment", middlewares.JwtMiddleware(), c.PostComment)
 }

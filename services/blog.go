@@ -39,7 +39,11 @@ type BlogList struct {
 }
 
 func (b *BlogService) List(page core.Page) (*core.PageResponse[BlogList], error) {
-	db := global.DB.Model(&models.Blog{})
+	db := global.DB.Model(&models.Blog{}).Order("updated_at DESC")
+	if page.Param["title"] != nil {
+		db.Where("title LIKE ?", "%"+page.Param["title"].(string)+"%")
+	}
+
 	var blogs []BlogList
 	total, err := core.Paginate(db, page, &blogs)
 	if err != nil {
@@ -66,7 +70,7 @@ func (b *BlogService) GetById(id uint) (*blogRes, error) {
 
 	db := global.DB.Model(&models.Blog{}).Where("id = ?", id)
 
-	err := db.Preload("Comment", func(db *gorm.DB) *gorm.DB {
+	err := db.Preload("Comments", func(db *gorm.DB) *gorm.DB {
 		return db.Preload("User").Order("created_at desc")
 	}).Preload("User").First(&blog).Error
 	if err != nil {
@@ -74,7 +78,7 @@ func (b *BlogService) GetById(id uint) (*blogRes, error) {
 	}
 	db.Updates(&models.Blog{ShowNum: blog.ShowNum + 1})
 	var comment []Comment
-	for _, v := range blog.Comment {
+	for _, v := range blog.Comments {
 		comment = append(comment, Comment{
 			CreatedAt: v.CreatedAt,
 			Desc:      v.Desc,
